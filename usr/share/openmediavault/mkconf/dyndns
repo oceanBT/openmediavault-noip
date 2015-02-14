@@ -1,0 +1,55 @@
+#!/bin/sh
+# This file is part of OpenMediaVault.
+#
+# @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
+# @author    Matthias Wenskus <matthias.wenskus@jabbs.de>
+# @copyright Copyright (c) 2015 Matthias Wenskus
+#
+# OpenMediaVault is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# OpenMediaVault is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+
+set -e 
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+# todo: why doesn´t work this?
+#OMV_CRONSCRIPTS_DIR = ${OMV_CRONSCRIPTS_DIR:-"/etc/cron.d/"}
+#echo  ${OMV_CRONSCRIPTS_DIR}
+
+OMV_RSYNCD_CONFIG=${OMV_RSYNCD_CONFIG:-"/etc/rsyncd.conf"}
+
+
+xmlstarlet sel -t -m "//services/dyndns" \
+  -v "concat('username = ',username)" -n \
+  -v "concat('password = ',password)" -n \
+  -v "concat('hostname = ',hostname)" -n \
+
+  -v extraoptions -n \
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_RSYNCD_CONFIG}
+
+
+
+
+
+
+
+echo "SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+# m h dom mon dow user    command
+*/4 * * * * root /var/lib/openmediavault/dyndns/dynDnsUpdater >/dev/null 2>&1
+" > /etc/cron.d/openmediavault-dyndnsupdater
+
+chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
+
+
