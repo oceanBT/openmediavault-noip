@@ -23,32 +23,26 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-# todo: why doesn´t work this?
+# todo: why this doesn´t work?
 #OMV_CRONSCRIPTS_DIR = ${OMV_CRONSCRIPTS_DIR:-"/etc/cron.d/"}
 #echo  ${OMV_CRONSCRIPTS_DIR}
 
-OMV_RSYNCD_CONFIG=${OMV_RSYNCD_CONFIG:-"/etc/rsyncd.conf"}
-
-
+#creating config file 
 xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('username = ',username)" -n \
   -v "concat('password = ',password)" -n \
   -v "concat('hostname = ',hostname)" -n \
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc > /var/lib/openmediavault/dyndns/config.ini
 
-  -v extraoptions -n \
-  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_RSYNCD_CONFIG}
+#creating cron file
+xmlstarlet sel -t -m "//services/dyndns" \
+  -o "SHELL=/bin/sh" -n \
+  -o "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" -n \
+  -o "# m h dom mon dow user    command" -n \
+  -o "SHELL=/bin/sh" -n \
+  -v "concat('*/',interval,' * * * * root /var/lib/openmediavault/dyndns/dynDnsUpdater >/dev/null 2>&1 ')" -n \
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc > /etc/cron.d/openmediavault-dyndnsupdater
 
-
-
-
-
-
-
-echo "SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-# m h dom mon dow user    command
-*/4 * * * * root /var/lib/openmediavault/dyndns/dynDnsUpdater >/dev/null 2>&1
-" > /etc/cron.d/openmediavault-dyndnsupdater
 
 chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
 
