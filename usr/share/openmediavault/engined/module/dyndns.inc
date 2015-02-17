@@ -57,7 +57,7 @@ class OMVModuleDynDns extends OMVModuleServiceAbstract implements
 		// under Diagnostics/Services.
 		return array(
 			"name" => $this->getName(),
-			"title" => gettext("D"),
+			"title" => gettext("DynDns"),
 			"enabled" => boolval($object["enable"]),
 			"running" => false
 		);

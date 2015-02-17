@@ -34,6 +34,10 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('hostname = ',hostname)" -n \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > /var/lib/openmediavault/dyndns/config.ini
 
+  
+ #todo  delete cron file and only if enabled =1 create a new script
+ 
+ 
 #creating cron file
 xmlstarlet sel -t -m "//services/dyndns" \
   -o "SHELL=/bin/sh" -n \

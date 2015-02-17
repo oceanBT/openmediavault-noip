@@ -97,7 +97,7 @@ class OMVRpcServiceDyndns extends OMVRpcServiceAbstract
 		$object = array(
 			"enable" => array_boolval($params, "enable"),
 			"hostname" => $params["hostname"],
-			"invterval" => $params["interval"],
+			"interval" => $params["interval"],
 			"username" => $params["username"],
 			"password" => $params["password"],
 		);
