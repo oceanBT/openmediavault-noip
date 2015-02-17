@@ -37,7 +37,10 @@ xmlstarlet sel -t -m "//services/dyndns" \
   
  #todo  delete cron file and only if enabled =1 create a new script
  
+enabled = $(xmlstarlet sel -t -m "//services/dyndns"  -v "enable" ${OMV_CONFIG_FILE} )
  
+if [ $enabled -eq 1 ]
+then
 #creating cron file
 xmlstarlet sel -t -m "//services/dyndns" \
   -o "SHELL=/bin/sh" -n \
@@ -47,7 +50,14 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('*/',interval,' * * * * root /var/lib/openmediavault/dyndns/dynDnsUpdater >/dev/null 2>&1 ')" -n \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > /etc/cron.d/openmediavault-dyndnsupdater
 
+  chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
+  
+else
+  rm  /etc/cron.d/openmediavault-dyndnsupdater
+fi
+ 
 
-chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
+
+
 
 

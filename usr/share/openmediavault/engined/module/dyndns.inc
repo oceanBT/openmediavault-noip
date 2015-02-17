@@ -36,7 +36,7 @@ class OMVModuleDynDns extends OMVModuleServiceAbstract implements
 	 */
 	public function getName()
 	{
-		return "DYNDNS";
+		return "dyndns";
 	}
 	/**
 	 * Get the module status.
