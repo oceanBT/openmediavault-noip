@@ -23,9 +23,19 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-# todo: why this doesn´t work?
-#OMV_CRONSCRIPTS_DIR = ${OMV_CRONSCRIPTS_DIR:-"/etc/cron.d/"}
-#echo  ${OMV_CRONSCRIPTS_DIR}
+# todo: replace absolute paths in all Files
+OMV_CRONSCRIPTS_DIR=${OMV_CRONSCRIPTS_DIR:-"/etc/cron.d/"}
+echo  ${OMV_CRONSCRIPTS_DIR}
+
+
+  
+ #todo  delete cron file and only if enabled =1 create a new script
+ #todo uninstall should remove all created Files
+ 
+enabled=$(xmlstarlet sel -t -m "//services/dyndns"  -v "enable" ${OMV_CONFIG_FILE} )
+ 
+if [ $enabled -eq 1 ]
+then
 
 #creating config file 
 xmlstarlet sel -t -m "//services/dyndns" \
@@ -34,13 +44,6 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('hostname = ',hostname)" -n \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > /var/lib/openmediavault/dyndns/config.ini
 
-  
- #todo  delete cron file and only if enabled =1 create a new script
- 
-enabled = $(xmlstarlet sel -t -m "//services/dyndns"  -v "enable" ${OMV_CONFIG_FILE} )
- 
-if [ $enabled -eq 1 ]
-then
 #creating cron file
 xmlstarlet sel -t -m "//services/dyndns" \
   -o "SHELL=/bin/sh" -n \
@@ -50,14 +53,9 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('*/',interval,' * * * * root /var/lib/openmediavault/dyndns/dynDnsUpdater >/dev/null 2>&1 ')" -n \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > /etc/cron.d/openmediavault-dyndnsupdater
 
-  chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
+chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
   
 else
-  rm  /etc/cron.d/openmediavault-dyndnsupdater
+  rm -f /etc/cron.d/openmediavault-dyndnsupdater
+  rm -f /var/lib/openmediavault/dyndns/config.ini
 fi
- 
-
-
-
-
-
