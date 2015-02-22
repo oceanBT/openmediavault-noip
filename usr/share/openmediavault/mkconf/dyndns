@@ -23,14 +23,12 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-# todo: replace absolute paths in all Files
+
 OMV_CRONSCRIPTS_DIR=${OMV_CRONSCRIPTS_DIR:-"/etc/cron.d/"}
 echo  ${OMV_CRONSCRIPTS_DIR}
 
-
-  
- #todo  delete cron file and only if enabled =1 create a new script
- #todo uninstall should remove all created Files
+# todo: replace absolute paths in all Files
+ #todo uninstall should remove all created files
  
 enabled=$(xmlstarlet sel -t -m "//services/dyndns"  -v "enable" ${OMV_CONFIG_FILE} )
  
@@ -39,9 +37,9 @@ then
 
 #creating config file 
 xmlstarlet sel -t -m "//services/dyndns" \
-  -v "concat('username = ',username)" -n \
-  -v "concat('password = ',password)" -n \
-  -v "concat('hostname = ',hostname)" -n \
+  -v "concat('username:',username)" -n \
+  -v "concat('password:',password)" -n \
+  -v "concat('hostname:',hostname)" -n \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > /var/lib/openmediavault/dyndns/config.ini
 
 #creating cron file
