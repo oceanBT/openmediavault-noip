@@ -1,0 +1,13 @@
+Source: openmediavault-noip
+Section: net
+XB-Plugin-Section: utilities
+Priority: optional
+Maintainer: root <root@jabbs.de>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.3
+
+Package: openmediavault-noip
+Architecture: any
+Depends: ${misc:Depends}, openmediavault(>=1.0.0)
+Description: OpenMediaVault noip plugin
+ A simple plugin for updating your dyndns 
