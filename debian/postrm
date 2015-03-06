@@ -17,7 +17,7 @@ case "$1" in
 	rm -f /etc/cron.d/openmediavault-dyndnsupdater
 	rm -f /var/lib/openmediavault/dyndns/config.ini
 	rm -f /var/lib/openmediavault/dyndns/dynDnsUpdater
-	rm -f /var/lib/openmediavault/dyndns
+	rmdir /var/lib/openmediavault/dyndns
     ;;
 
     remove)
