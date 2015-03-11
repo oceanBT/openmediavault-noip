@@ -2,8 +2,8 @@
  * This file is part of OpenMediaVault.
  *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
- * @author    Volker Theile <volker.theile@openmediavault.org>
- * @copyright Copyright (c) 2009-2015 Volker Theile
+ * @author    Matthias Wenskus <matthias.wenskus@jabbs.de>
+ * @copyright Copyright (c) 2015 Matthias Wenskus
  *
  * OpenMediaVault is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
