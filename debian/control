@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.3
 
 Package: openmediavault-noip
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, openmediavault(>=1.0.0)
 Description: OpenMediaVault noip plugin
- A simple plugin for updating your dyndns 
+ A simple plugin to update your IP 
