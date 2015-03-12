@@ -18,18 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
 
-set -e 
+set -e  
 
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
 
-OMV_CRONSCRIPTS_DIR=${OMV_CRONSCRIPTS_DIR:-"/etc/cron.d/"}
-echo  ${OMV_CRONSCRIPTS_DIR}
+CRON_DIR="/etc/cron.d/"
+OMV_DYNDNS_UPDATE_SCRIPT_DIR="/var/lib/openmediavault/dyndns"
 
-# todo: replace absolute paths in all Files
- #todo uninstall should remove all created files
- 
+
 enabled=$(xmlstarlet sel -t -m "//services/dyndns"  -v "enable" ${OMV_CONFIG_FILE} )
  
 if [ $enabled -eq 1 ]
@@ -40,7 +38,7 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('username:',username)" -n \
   -v "concat('password:',password)" -n \
   -v "concat('hostname:',hostname)" -n \
-  ${OMV_CONFIG_FILE} | xmlstarlet unesc > /var/lib/openmediavault/dyndns/config.ini
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/config.ini
 
 #creating cron file
 xmlstarlet sel -t -m "//services/dyndns" \
@@ -48,12 +46,12 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -o "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" -n \
   -o "# m h dom mon dow user    command" -n \
   -o "SHELL=/bin/sh" -n \
-  -v "concat('*/',interval,' * * * * root /var/lib/openmediavault/dyndns/dynDnsUpdater >/dev/null 2>&1 ')" -n \
-  ${OMV_CONFIG_FILE} | xmlstarlet unesc > /etc/cron.d/openmediavault-dyndnsupdater
+  -v "concat('*/',interval,' * * * * root ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/dynDnsUpdater >/dev/null 2>&1 ')" -n \
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${CRON_DIR}/openmediavault-dyndnsupdater
 
-chmod 644 /etc/cron.d/openmediavault-dyndnsupdater
+chmod 644 ${CRON_DIR}/openmediavault-dyndnsupdater
   
 else
-  rm -f /etc/cron.d/openmediavault-dyndnsupdater
-  rm -f /var/lib/openmediavault/dyndns/config.ini
+  rm -f /${CRON_DIR}/openmediavault-dyndnsupdater
+  rm -f ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/dyndns/config.ini
 fi

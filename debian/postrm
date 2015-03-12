@@ -5,6 +5,9 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
+OMV_DYNDNS_UPDATE_SCRIPT_DIR="/var/lib/openmediavault/dyndns"
+CRON_DIR="/etc/cron.d/"
+
 SERVICE_XPATH_NAME="dyndns"
 SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
@@ -14,10 +17,10 @@ case "$1" in
             omv_config_delete ${SERVICE_XPATH}
         fi
 
-	rm -f /etc/cron.d/openmediavault-dyndnsupdater
-	rm -f /var/lib/openmediavault/dyndns/config.ini
-	rm -f /var/lib/openmediavault/dyndns/dynDnsUpdater
-	rmdir /var/lib/openmediavault/dyndns
+	rm -f ${CRON_DIR}/openmediavault-dyndnsupdater
+	rm -f ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/config.ini
+	rm -f ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/dynDnsUpdater
+	rmdir ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}
     ;;
 
     remove)
