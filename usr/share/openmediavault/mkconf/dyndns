@@ -40,6 +40,8 @@ xmlstarlet sel -t -m "//services/dyndns" \
   -v "concat('hostname:',hostname)" -n \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/config.ini
 
+  chmod 600 ${OMV_DYNDNS_UPDATE_SCRIPT_DIR}/config.ini
+  
 #creating cron file
 xmlstarlet sel -t -m "//services/dyndns" \
   -o "SHELL=/bin/sh" -n \
